@@ -29,12 +29,12 @@ class AuthorizationsController extends AppController
      * @param AuthorizationRequest $request
      * @return mixed
      */
-    public function login($type, AuthorizationRequest $request)
+    public function login(AuthorizationRequest $request)
     {
         // 校验验证码
         // check_verification_code($request->only(['username', 'verification_code']), 'login');
 
-        $credentials = $request->input(['username', 'password']);
+        $credentials = $request->only(['username', 'password']);
         if (!Auth::guard('api')->validate($credentials)) {
             return $this->response->errorunauthorized(trans('auth.failed'));
         }
