@@ -13,8 +13,7 @@ $api->version('v1', [], function ($api) {
         'namespace' => 'Api\Auth\V1\Controllers',
         'prefix' => 'authorizations',
     ], function ($api) {
+        $api->post('register', 'RegisterController@register');
         $api->post('login', 'AuthorizationsController@login');
-        $api->post('register', 'AuthorizationsController@login');
     });
 });
-

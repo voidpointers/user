@@ -27,7 +27,10 @@
             "App\\": "app/",
             "User\\": "app/User",
             "Api\\": "app/Api"
-        }
+        },
+        "files": [
+            "bootstrap/helpers.php"
+        ]
     },
     "autoload-dev": {
         "classmap": [

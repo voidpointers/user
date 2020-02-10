@@ -3,12 +3,15 @@
 namespace Api\Auth\V1\Controllers;
 
 use Api\Auth\V1\Requests\RegisterRequest;
+use Api\Auth\V1\Traits\ResponseTrait;
 use App\Controller;
 use Illuminate\Support\Facades\Hash;
 use User\Entities\User;
 
 class RegisterController extends Controller
 {
+    use ResponseTrait;
+
     /*
     |--------------------------------------------------------------------------
     | Register Controller
@@ -27,7 +30,6 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
     }
 
     /**
@@ -38,9 +40,12 @@ class RegisterController extends Controller
      */
     public function register(RegisterRequest $request)
     {
-        $user = $this->create($request->all());
+        // 校验用户名是否已存在
+        if ($this->userByName($request->input('username', ''))) {
+            return $this->response->error('该用户已注册，请登录', 500);
+        }
 
-        $this->guard()->login($user);
+        $user = $this->create($request->all());
 
         return $this->respondWithUser($user);
     }
@@ -54,8 +59,16 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'username' => $data['name'],
+            'username' => $data['username'],
             'password' => Hash::make($data['password']),
         ]);
+    }
+
+    /**
+     * 根据用户名获取用户
+     */
+    protected function userByName($username)
+    {
+        return User::where(['username' => $username])->first();
     }
 }

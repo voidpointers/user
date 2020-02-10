@@ -40,7 +40,7 @@ class AuthorizationsController extends Controller
             return $this->response->errorunauthorized(trans('auth.failed'));
         }
 
-        $user = User::where($request->input('username'))->first();
+        $user = User::where(['username' => $request->input('username')])->first();
         if (!$user) {
             return $this->response->errorunauthorized(trans('auth.failed'));
         }
