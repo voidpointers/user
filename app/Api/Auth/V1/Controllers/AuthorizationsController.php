@@ -1,12 +1,11 @@
 <?php
 
-namespace Api\User\V1\Controllers;
+namespace Api\Auth\V1\Controllers;
 
 use Illuminate\Support\Facades\Auth;
-use Api\User\V1\Requests\AuthorizationRequest;
-use Api\User\V1\Transformers\UserTransformer;
-use App\Controller as AppController;
-use League\Fractal\Serializer\DataArraySerializer;
+use Api\Auth\V1\Requests\AuthorizationRequest;
+use Api\Auth\V1\Traits\ResponseTrait;
+use App\Controller;
 use User\Entities\User;
 
 /**
@@ -15,8 +14,10 @@ use User\Entities\User;
  * @author bryan <voidpointers@hotmail.com>
  * @Resource("账户认证", uri="/users")
  */
-class AuthorizationsController extends AppController
+class AuthorizationsController extends Controller
 {
+    use ResponseTrait;
+
     /**
      * 登录
      *
@@ -73,42 +74,5 @@ class AuthorizationsController extends AppController
     {
         Auth::guard('api')->logout();
         return $this->response->noContent();
-    }
-
-    /**
-     * 通过用户获取token
-     * 
-     * @return mixed
-     */
-    protected function respondWithUser($user)
-    {
-        return $this->response->item(
-            $user,
-            new UserTransformer(),
-            function ($resource, $fractal) {
-                return $fractal->setSerializer(new DataArraySerializer);
-            }
-        )
-        ->setMeta([
-            'access_token' => Auth::guard('api')->fromUser($user),
-            'token_type' => 'Bearer',
-            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60
-        ])
-        ->setStatusCode(201);
-    }
-
-    /**
-     * 返回统一格式
-     *
-     * @param $token
-     * @return mixed
-     */
-    protected function respondWithToken($token)
-    {
-        return $this->response->array([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60
-        ]);
     }
 }

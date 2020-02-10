@@ -1,10 +1,10 @@
 <?php
 
-namespace Api\User\V1\Requests;
+namespace Api\Auth\V1\Requests;
 
 use App\FormRequest;
 
-class AuthorizationRequest extends FormRequest
+class RegisterRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,8 +14,8 @@ class AuthorizationRequest extends FormRequest
     public function rules()
     {
         return [
-            'username' => 'required|string',
-            'password' => 'required|string|min:4',
+            'username' => 'required|string|max:255',
+            'password' => 'required|string|min:4|max:255',
         ];
     }
 
