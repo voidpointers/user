@@ -1,6 +1,6 @@
 <?php
 
-namespace Api\Format;
+namespace Api\Fractal;
 
 use Dingo\Api\Http\Response\Format\Format;
 use Dingo\Api\Http\Response\Format\JsonOptionalFormatting;
@@ -31,8 +31,7 @@ class Json extends Format
             $key = Str::camel($key);
         }
 
-        $data = [$key => $model->toArray()];
-        return $this->encode(['data' => $data]);
+        return $this->encode([$key => $model->toArray()]);
     }
 
     /**
@@ -55,8 +54,7 @@ class Json extends Format
             $key = Str::camel($key);
         }
 
-        $data = [$key => $collection->toArray()];
-        return $this->encode(['data' => $data]);
+        return $this->encode([$key => $collection->toArray()]);
     }
 
     /**
@@ -74,12 +72,7 @@ class Json extends Format
             $value = $this->morphToArray($value);
         });
 
-        if (isset($content['data'])) {
-            $data = $content;
-        } else {
-            $data = ['data' => $content];
-        }
-        return $this->encode($data);
+        return $this->encode($content);
     }
 
     /**
